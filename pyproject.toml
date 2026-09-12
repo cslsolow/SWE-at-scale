@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "freeswe-injection"
+version = "0.1.0"
+description = "Single-file SWE-style issue injection with numbered-fixed and task-plan executors"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["openai>=1.40.0"]
+
+[project.scripts]
+freeswe = "freeswe.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
