@@ -187,3 +187,10 @@ FreeSWE/
 ├── pyproject.toml
 └── README.md
 ```
+
+## 🙏 Acknowledgements
+
+We thank the authors and maintainers of [SWE-smith](https://github.com/SWE-bench/SWE-smith)
+and [SWE-bench](https://github.com/SWE-bench/SWE-bench) for their open-source
+benchmark resources and evaluation foundations, which informed the design of
+FreeSWE and FreeSWE-Plus.
