@@ -1,11 +1,11 @@
 <div align="center">
   <img src="assets/FreeSWE_logo.png" alt="FreeSWE" width="760" />
-  <h1>FreeSWE &amp; FreeSWE-Plus</h1>
+  <h1>🧪 FreeSWE &amp; FreeSWE-Plus</h1>
   <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
 
-## Overview
+## 🧭 Overview
 
 FreeSWE packages two complementary issue-injection methods behind one small
 command-line interface. **FreeSWE** directly proposes a behaviorally meaningful
@@ -18,7 +18,7 @@ applied to the original source.
 
 The vector figure is available as [PDF](assets/framework.pdf).
 
-### What is different
+### 🔀 What is different
 
 | Mode | Model interaction | Final artifact |
 |---|---|---|
@@ -29,7 +29,7 @@ The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
 bug after seeing the plan.
 
-## Installation
+## 📦 Installation
 
 Python 3.10 or newer is required.
 
@@ -47,7 +47,7 @@ override is supplied. For another OpenAI-compatible server, set the endpoint
 through an environment variable at runtime; no provider-specific URL is stored
 in this repository.
 
-## Quick start
+## 🚀 Quick start
 
 Set a credential and the model identifiers in the shell that launches FreeSWE.
 They are intentionally not stored in configuration files or output metadata.
@@ -63,7 +63,7 @@ information:
 examples/fixed_context.py
 ```
 
-### FreeSWE
+### 🧩 FreeSWE
 
 The input file itself remains unnumbered. Reference numbers are added only to
 the model prompt, and the returned patch must apply to the original source
@@ -87,7 +87,7 @@ diff --git a/fixed_context.py b/fixed_context.py
 </issue_patch>
 ```
 
-### FreeSWE-Plus
+### ✨ FreeSWE-Plus
 
 The planner returns both a structured implementation plan and a natural
 language problem statement. The executor receives the fixed source and the
@@ -117,7 +117,7 @@ The expected executor format is:
 </modified_file>
 ```
 
-## Validation and safety checks
+## ✅ Validation and safety checks
 
 Every generated result passes the same local validation sequence:
 
@@ -131,7 +131,7 @@ The package does not run a repository-wide test suite. Repository-level Docker
 evaluation and benchmark orchestration are intentionally outside this minimal,
 public release.
 
-## Output layout
+## 📁 Output layout
 
 Each run writes only relative artifact names inside the requested output
 directory:
@@ -153,7 +153,7 @@ result.json                   # status, patch statistics, and validation details
 `result.json` records the selected model identifier but never records API keys,
 runtime credentials, absolute input paths, or endpoint values.
 
-## Runtime configuration
+## ⚙️ Runtime configuration
 
 The following values are runtime-only:
 
@@ -170,7 +170,7 @@ Command-line model options override the corresponding environment variables.
 Never commit a real `.env` file or generated output containing proprietary
 source code.
 
-## Repository structure
+## 🗂️ Repository structure
 
 ```text
 FreeSWE/
@@ -188,7 +188,7 @@ FreeSWE/
 └── README.md
 ```
 
-## Development
+## 🛠️ Development
 
 ```bash
 python -m pip install -e .
@@ -197,7 +197,7 @@ python -m pytest -q
 
 The test suite uses a fake model client and makes no network requests.
 
-## Scope and limitations
+## 📌 Scope and limitations
 
 - Current release focuses on one target source per run.
 - The code does not bundle model checkpoints or select a particular hosted
