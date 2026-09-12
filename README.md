@@ -1,18 +1,18 @@
 <div align="center">
   <img src="assets/FreeSWE_logo.png" alt="FreeSWE" width="760" />
   <h1>FreeSWE &amp; FreeSWE-Plus</h1>
-  <p><strong>Realistic single-file issue injection for SWE-style benchmarks</strong></p>
+  <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
 
 ## Overview
 
-FreeSWE packages two complementary issue-injection modes behind one small
-command-line interface. In the paper, the direct patch model is called
-**FreeSWE**, while the planner/executor model is called **FreeSWE-Plus**. Both
-modes start from a verified, correct source file
-and produce an injected file plus a unified diff that can be applied to the
-original file.
+FreeSWE packages two complementary issue-injection methods behind one small
+command-line interface. **FreeSWE** directly proposes a behaviorally meaningful
+issue patch, while **FreeSWE-Plus** first creates a structured plan and then
+uses an executor to implement it. Both methods start from verified, correct
+source code and produce an injected file plus a unified diff that can be
+applied to the original source.
 
 ![FreeSWE framework](assets/framework.png)
 
@@ -22,8 +22,8 @@ The vector figure is available as [PDF](assets/framework.pdf).
 
 | Mode | Model interaction | Final artifact |
 |---|---|---|
-| **FreeSWE (Numbered Fixed)** | A model sees the fixed file with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
-| **FreeSWE-Plus (Task Plan + Executor)** | A planner proposes a task plan and problem statement; a separate executor implements that plan in the fixed file. | `<task_plan>` → `<modified_file>` → injected file + unified diff |
+| **FreeSWE** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
+| **FreeSWE-Plus** | A planner proposes a structured implementation plan and problem statement; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
 
 The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
@@ -63,19 +63,19 @@ information:
 examples/fixed_context.py
 ```
 
-### FreeSWE: Numbered Fixed
+### FreeSWE
 
 The input file itself remains unnumbered. Reference numbers are added only to
 the model prompt, and the returned patch must apply to the original source
 without those prefixes.
 
 ```bash
-export NUMBERED_FIXED_MODEL='your-numbered-fixed-model'
+export FREESWE_MODEL='your-model'
 
-freeswe numbered-fixed \
-  --model "$NUMBERED_FIXED_MODEL" \
+freeswe free-swe \
+  --model "$FREESWE_MODEL" \
   --input examples/fixed_context.py \
-  --output-dir outputs/numbered_fixed
+  --output-dir outputs/free_swe
 ```
 
 The model must return exactly:
@@ -87,7 +87,7 @@ diff --git a/fixed_context.py b/fixed_context.py
 </issue_patch>
 ```
 
-### FreeSWE-Plus: Task Plan + Executor
+### FreeSWE-Plus
 
 The planner returns both a structured implementation plan and a natural
 language problem statement. The executor receives the fixed source and the
@@ -96,22 +96,18 @@ but is not passed to the executor by default; use the flag only for an
 intentional problem-statement variant.
 
 ```bash
-export TASK_PLAN_MODEL='your-task-plan-model'
-export TASK_PLAN_EXECUTOR_MODEL='your-task-plan-executor-model'
+export FREESWE_PLUS_PLANNER_MODEL='your-planner-model'
+export FREESWE_PLUS_EXECUTOR_MODEL='your-executor-model'
 
-freeswe task-plan \
-  --planner-model "$TASK_PLAN_MODEL" \
-  --executor-model "$TASK_PLAN_EXECUTOR_MODEL" \
+freeswe free-swe-plus \
+  --planner-model "$FREESWE_PLUS_PLANNER_MODEL" \
+  --executor-model "$FREESWE_PLUS_EXECUTOR_MODEL" \
   --input examples/fixed_context.py \
-  --output-dir outputs/task_plan
+  --output-dir outputs/free_swe_plus
 ```
 
-The expected planner format is:
-
-```text
-<task_plan>...</task_plan>
-<problem_statement>...</problem_statement>
-```
+The planner returns a structured implementation plan and a realistic problem
+statement. The executor receives the fixed source and the structured plan.
 
 The expected executor format is:
 
@@ -142,16 +138,15 @@ directory:
 
 ```text
 messages.json                 # sanitized prompt messages
-planner_messages.json         # Task Plan mode only
-executor_messages.json        # Task Plan mode only
-model_raw_output.txt          # Numbered Fixed mode only
-planner_raw_output.txt        # Task Plan mode only
-executor_raw_output.txt       # Task Plan mode only
-task_plan.txt                 # Task Plan mode only
-problem_statement.txt         # Task Plan mode only, when returned
-modified_file                 # Task Plan mode only
+planner_messages.json         # FreeSWE-Plus only
+executor_messages.json        # FreeSWE-Plus only
+model_raw_output.txt          # FreeSWE only
+planner_raw_output.txt        # FreeSWE-Plus only
+executor_raw_output.txt       # FreeSWE-Plus only
+problem_statement.txt         # FreeSWE-Plus only, when returned
+modified_file                 # FreeSWE-Plus only
 injected_file                 # validated issue-state file
-injection.patch               # validated single-file unified diff
+injection.patch               # validated unified diff
 result.json                   # status, patch statistics, and validation details
 ```
 
@@ -167,9 +162,9 @@ The following values are runtime-only:
 | `OPENAI_API_KEY` | API credential |
 | `OPENAI_BASE_URL` | Optional OpenAI-compatible endpoint override |
 | `OPENAI_MODEL` | Fallback model identifier |
-| `NUMBERED_FIXED_MODEL` | Numbered Fixed model identifier |
-| `TASK_PLAN_MODEL` | Planner model identifier |
-| `TASK_PLAN_EXECUTOR_MODEL` | Executor model identifier |
+| `FREESWE_MODEL` | FreeSWE model identifier |
+| `FREESWE_PLUS_PLANNER_MODEL` | FreeSWE-Plus planner model identifier |
+| `FREESWE_PLUS_EXECUTOR_MODEL` | FreeSWE-Plus executor model identifier |
 
 Command-line model options override the corresponding environment variables.
 Never commit a real `.env` file or generated output containing proprietary
@@ -185,12 +180,7 @@ FreeSWE/
 │   └── framework.png
 ├── examples/
 │   └── fixed_context.py
-├── src/freeswe/
-│   ├── api.py                  # provider-neutral OpenAI SDK client
-│   ├── cli.py                  # unified CLI
-│   ├── numbered_fixed.py       # FreeSWE direct patch generation
-│   ├── task_plan.py            # FreeSWE-Plus planner + executor
-│   └── patches.py              # single-file validation and apply fallback
+├── src/freeswe/                # provider client, CLI, pipelines, validation
 ├── tests/
 ├── .env.example
 ├── .gitignore
@@ -209,10 +199,10 @@ The test suite uses a fake model client and makes no network requests.
 
 ## Scope and limitations
 
-- Current release: single-file issue injection only.
+- Current release focuses on one target source per run.
 - The code does not bundle model checkpoints or select a particular hosted
   model automatically.
 - The code does not include benchmark data, Docker images, repository clones,
   or repo-bounded evaluation infrastructure.
-- Multi-file orchestration can be added later without changing the two
-  single-file output contracts.
+- Broader repository orchestration can be added later without changing the two
+  output contracts.

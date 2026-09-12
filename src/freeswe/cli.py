@@ -1,4 +1,4 @@
-"""Command-line interface for the two single-file injection pipelines."""
+"""Command-line interface for the FreeSWE issue-injection pipelines."""
 
 from __future__ import annotations
 
@@ -11,10 +11,16 @@ from .numbered_fixed import run as run_numbered_fixed
 from .task_plan import run as run_task_plan
 
 
-def _required_model(value: str | None, env_name: str) -> str:
-    model = value or os.getenv(env_name) or os.getenv("OPENAI_MODEL")
+def _required_model(value: str | None, env_names: tuple[str, ...]) -> str:
+    model = value
     if not model:
-        raise SystemExit(f"model is required; pass the option or set {env_name}/OPENAI_MODEL")
+        for env_name in (*env_names, "OPENAI_MODEL"):
+            model = os.getenv(env_name)
+            if model:
+                break
+    if not model:
+        names = "/".join((*env_names, "OPENAI_MODEL"))
+        raise SystemExit(f"model is required; pass the option or set {names}")
     return model
 
 
@@ -28,18 +34,26 @@ def _common(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="freeswe",
-        description="Generate a single-file SWE-style issue with FreeSWE or FreeSWE-Plus.",
+        description="Generate an SWE-style issue with FreeSWE or FreeSWE-Plus.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    numbered = subparsers.add_parser("numbered-fixed", help="FreeSWE: line-numbered fixed context -> issue patch")
+    numbered = subparsers.add_parser(
+        "free-swe",
+        aliases=["numbered-fixed"],
+        help="FreeSWE: direct issue-patch generation",
+    )
     _common(numbered)
     numbered.add_argument("--model")
     numbered.add_argument("--base-url", help="optional runtime OpenAI-compatible base URL")
     numbered.add_argument("--temperature", type=float, default=0.0)
     numbered.add_argument("--max-tokens", type=int, default=16_384)
 
-    planner = subparsers.add_parser("task-plan", help="FreeSWE-Plus: task plan -> executor -> issue patch")
+    planner = subparsers.add_parser(
+        "free-swe-plus",
+        aliases=["task-plan"],
+        help="FreeSWE-Plus: planner/executor issue generation",
+    )
     _common(planner)
     planner.add_argument("--planner-model")
     planner.add_argument("--executor-model")
@@ -59,11 +73,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.command == "numbered-fixed":
+    if args.command in {"free-swe", "numbered-fixed"}:
         result = run_numbered_fixed(
             args.input,
             args.output_dir,
-            model=_required_model(args.model, "NUMBERED_FIXED_MODEL"),
+            model=_required_model(args.model, ("FREESWE_MODEL", "NUMBERED_FIXED_MODEL")),
             base_url=args.base_url,
             temperature=args.temperature,
             max_tokens=args.max_tokens,
@@ -74,8 +88,14 @@ def main(argv: list[str] | None = None) -> int:
         result = run_task_plan(
             args.input,
             args.output_dir,
-            planner_model=_required_model(args.planner_model, "TASK_PLAN_MODEL"),
-            executor_model=_required_model(args.executor_model, "TASK_PLAN_EXECUTOR_MODEL"),
+            planner_model=_required_model(
+                args.planner_model,
+                ("FREESWE_PLUS_PLANNER_MODEL", "TASK_PLAN_MODEL"),
+            ),
+            executor_model=_required_model(
+                args.executor_model,
+                ("FREESWE_PLUS_EXECUTOR_MODEL", "TASK_PLAN_EXECUTOR_MODEL"),
+            ),
             planner_base_url=args.planner_base_url,
             executor_base_url=args.executor_base_url,
             planner_temperature=args.planner_temperature,
