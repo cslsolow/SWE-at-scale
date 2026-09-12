@@ -187,22 +187,3 @@ FreeSWE/
 ├── pyproject.toml
 └── README.md
 ```
-
-## 🛠️ Development
-
-```bash
-python -m pip install -e .
-python -m pytest -q
-```
-
-The test suite uses a fake model client and makes no network requests.
-
-## 📌 Scope and limitations
-
-- Current release focuses on one target source per run.
-- The code does not bundle model checkpoints or select a particular hosted
-  model automatically.
-- The code does not include benchmark data, Docker images, repository clones,
-  or repo-bounded evaluation infrastructure.
-- Broader repository orchestration can be added later without changing the two
-  output contracts.
