@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/FreeSWE_logo.png" alt="FreeSWE" width="760" />
-  <h1>🧪 FreeSWE &amp; FreeSWE-Plus</h1>
+  <h1>🧪 FreeSWE </h1>
   <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
