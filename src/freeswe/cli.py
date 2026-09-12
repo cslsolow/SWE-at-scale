@@ -28,18 +28,18 @@ def _common(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="freeswe",
-        description="Generate a single-file SWE-style issue with either FreeSWE pipeline.",
+        description="Generate a single-file SWE-style issue with FreeSWE or FreeSWE-Plus.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    numbered = subparsers.add_parser("numbered-fixed", help="line-numbered fixed context -> issue patch")
+    numbered = subparsers.add_parser("numbered-fixed", help="FreeSWE: line-numbered fixed context -> issue patch")
     _common(numbered)
     numbered.add_argument("--model")
     numbered.add_argument("--base-url", help="optional runtime OpenAI-compatible base URL")
     numbered.add_argument("--temperature", type=float, default=0.0)
     numbered.add_argument("--max-tokens", type=int, default=16_384)
 
-    planner = subparsers.add_parser("task-plan", help="task plan -> executor -> issue patch")
+    planner = subparsers.add_parser("task-plan", help="FreeSWE-Plus: task plan -> executor -> issue patch")
     _common(planner)
     planner.add_argument("--planner-model")
     planner.add_argument("--executor-model")

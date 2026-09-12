@@ -1,4 +1,4 @@
-"""Stage 5 Task Plan plus executor inference pipeline."""
+"""FreeSWE-Plus (Stage 5 Task Plan plus Executor) pipeline."""
 
 from __future__ import annotations
 

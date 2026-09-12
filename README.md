@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/FreeSWE_logo.png" alt="FreeSWE" width="760" />
-  <h1>FreeSWE</h1>
+  <h1>FreeSWE &amp; FreeSWE-Plus</h1>
   <p><strong>Realistic single-file issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
@@ -8,7 +8,9 @@
 ## Overview
 
 FreeSWE packages two complementary issue-injection modes behind one small
-command-line interface. Both modes start from a verified, correct source file
+command-line interface. In the paper, the direct patch model is called
+**FreeSWE**, while the planner/executor model is called **FreeSWE-Plus**. Both
+modes start from a verified, correct source file
 and produce an injected file plus a unified diff that can be applied to the
 original file.
 
@@ -20,8 +22,8 @@ The vector figure is available as [PDF](assets/framework.pdf).
 
 | Mode | Model interaction | Final artifact |
 |---|---|---|
-| **Numbered Fixed** | A model sees the fixed file with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
-| **Task Plan + Executor** | A planner proposes a task plan and problem statement; a separate executor implements that plan in the fixed file. | `<task_plan>` → `<modified_file>` → injected file + unified diff |
+| **FreeSWE (Numbered Fixed)** | A model sees the fixed file with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
+| **FreeSWE-Plus (Task Plan + Executor)** | A planner proposes a task plan and problem statement; a separate executor implements that plan in the fixed file. | `<task_plan>` → `<modified_file>` → injected file + unified diff |
 
 The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
@@ -61,7 +63,7 @@ information:
 examples/fixed_context.py
 ```
 
-### Numbered Fixed
+### FreeSWE: Numbered Fixed
 
 The input file itself remains unnumbered. Reference numbers are added only to
 the model prompt, and the returned patch must apply to the original source
@@ -85,7 +87,7 @@ diff --git a/fixed_context.py b/fixed_context.py
 </issue_patch>
 ```
 
-### Task Plan + Executor
+### FreeSWE-Plus: Task Plan + Executor
 
 The planner returns both a structured implementation plan and a natural
 language problem statement. The executor receives the fixed source and the
@@ -186,8 +188,8 @@ FreeSWE/
 ├── src/freeswe/
 │   ├── api.py                  # provider-neutral OpenAI SDK client
 │   ├── cli.py                  # unified CLI
-│   ├── numbered_fixed.py       # direct patch generation
-│   ├── task_plan.py            # planner + executor generation
+│   ├── numbered_fixed.py       # FreeSWE direct patch generation
+│   ├── task_plan.py            # FreeSWE-Plus planner + executor
 │   └── patches.py              # single-file validation and apply fallback
 ├── tests/
 ├── .env.example

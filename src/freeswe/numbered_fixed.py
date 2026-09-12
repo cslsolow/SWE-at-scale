@@ -1,4 +1,4 @@
-"""Stage 5 Numbered Fixed inference pipeline."""
+"""FreeSWE (Stage 5 Numbered Fixed) inference pipeline."""
 
 from __future__ import annotations
 
