@@ -34,7 +34,7 @@ def _common(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="freeswe",
-        description="Generate an SWE-style issue with FreeSWE or FreeSWE-Plus.",
+        description="Generate an SWE-style issue with FreeSWE or FreeSWE+.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -52,7 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
     planner = subparsers.add_parser(
         "free-swe-plus",
         aliases=["task-plan"],
-        help="FreeSWE-Plus: planner/executor issue generation",
+        help="FreeSWE+: planner/executor issue generation",
     )
     _common(planner)
     planner.add_argument("--planner-model")
