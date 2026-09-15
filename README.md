@@ -9,21 +9,20 @@
 
 FreeSWE packages two complementary issue-injection methods behind one small
 command-line interface. **FreeSWE** directly proposes a behaviorally meaningful
-issue patch, while **FreeSWE-Plus** first creates a structured plan and then
+issue patch, while **FreeSWE+** first creates a structured plan and then
 uses an executor to implement it. Both methods start from verified, correct
 source code and produce an injected file plus a unified diff that can be
 applied to the original source.
 
 ![FreeSWE framework](assets/framework.png)
 
-The vector figure is available as [PDF](assets/framework.pdf).
 
 ### 🔀 What is different
 
 | Mode | Model interaction | Final artifact |
 |---|---|---|
 | **FreeSWE** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
-| **FreeSWE-Plus** | A planner proposes a structured implementation plan and problem statement; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
+| **FreeSWE+** | A planner proposes a structured implementation plan and problem statement; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
 
 The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
@@ -87,7 +86,7 @@ diff --git a/fixed_context.py b/fixed_context.py
 </issue_patch>
 ```
 
-### ✨ FreeSWE-Plus
+### ✨ FreeSWE+
 
 The planner returns both a structured implementation plan and a natural
 language problem statement. The executor receives the fixed source and the
@@ -138,13 +137,13 @@ directory:
 
 ```text
 messages.json                 # sanitized prompt messages
-planner_messages.json         # FreeSWE-Plus only
-executor_messages.json        # FreeSWE-Plus only
+planner_messages.json         # FreeSWE+ only
+executor_messages.json        # FreeSWE+ only
 model_raw_output.txt          # FreeSWE only
-planner_raw_output.txt        # FreeSWE-Plus only
-executor_raw_output.txt       # FreeSWE-Plus only
-problem_statement.txt         # FreeSWE-Plus only, when returned
-modified_file                 # FreeSWE-Plus only
+planner_raw_output.txt        # FreeSWE+ only
+executor_raw_output.txt       # FreeSWE+ only
+problem_statement.txt         # FreeSWE+ only, when returned
+modified_file                 # FreeSWE+ only
 injected_file                 # validated issue-state file
 injection.patch               # validated unified diff
 result.json                   # status, patch statistics, and validation details
@@ -163,8 +162,8 @@ The following values are runtime-only:
 | `OPENAI_BASE_URL` | Optional OpenAI-compatible endpoint override |
 | `OPENAI_MODEL` | Fallback model identifier |
 | `FREESWE_MODEL` | FreeSWE model identifier |
-| `FREESWE_PLUS_PLANNER_MODEL` | FreeSWE-Plus planner model identifier |
-| `FREESWE_PLUS_EXECUTOR_MODEL` | FreeSWE-Plus executor model identifier |
+| `FREESWE_PLUS_PLANNER_MODEL` | FreeSWE+ planner model identifier |
+| `FREESWE_PLUS_EXECUTOR_MODEL` | FreeSWE+ executor model identifier |
 
 Command-line model options override the corresponding environment variables.
 Never commit a real `.env` file or generated output containing proprietary
@@ -193,4 +192,4 @@ FreeSWE/
 We thank the authors and maintainers of [SWE-smith](https://github.com/SWE-bench/SWE-smith)
 and [SWE-bench](https://github.com/SWE-bench/SWE-bench) for their open-source
 benchmark resources and evaluation foundations, which informed the design of
-FreeSWE and FreeSWE-Plus.
+FreeSWE and FreeSWE+.
