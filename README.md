@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/SWE-at-scale_logo.png" alt="SWE-at-scale" width="760" />
-  <h1>🧪 SWE-at-scale </h1>
+  <h1>🧪 SWE-at-scale: Scalable Issue Synthesis from Historical Bug Fixes </h1>
   <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
