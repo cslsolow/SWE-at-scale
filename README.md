@@ -1,28 +1,28 @@
 <div align="center">
-  <img src="assets/FreeSWE_logo.png" alt="FreeSWE" width="760" />
-  <h1>🧪 FreeSWE </h1>
+  <img src="assets/SWE-at-scale_logo.png" alt="SWE-at-scale" width="760" />
+  <h1>🧪 SWE-at-scale </h1>
   <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
 
 ## 🧭 Overview
 
-FreeSWE packages two complementary issue-injection methods behind one small
-command-line interface. **FreeSWE** directly proposes a behaviorally meaningful
-issue patch, while **FreeSWE+** first creates a structured plan and then
+SWE-at-scale packages two complementary issue-injection methods behind one small
+command-line interface. **SWE-at-scale** directly proposes a behaviorally meaningful
+issue patch, while **SWE-at-scale+** first creates a structured plan and then
 uses an executor to implement it. Both methods start from verified, correct
 source code and produce an injected file plus a unified diff that can be
 applied to the original source.
 
-![FreeSWE framework](assets/framework.png)
+![SWE-at-scale framework](assets/framework.png)
 
 
 ### 🔀 What is different
 
 | Mode | Model interaction | Final artifact |
 |---|---|---|
-| **FreeSWE** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
-| **FreeSWE+** | A planner proposes a structured implementation plan and problem statement; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
+| **SWE-at-scale** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
+| **SWE-at-scale+** | A planner proposes a structured implementation plan and problem statement; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
 
 The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
@@ -34,7 +34,7 @@ Python 3.10 or newer is required.
 
 ```bash
 git clone <repository-url>
-cd FreeSWE
+cd SWE-at-scale
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
@@ -48,7 +48,7 @@ in this repository.
 
 ## 🚀 Quick start
 
-Set a credential and the model identifiers in the shell that launches FreeSWE.
+Set a credential and the model identifiers in the shell that launches SWE-at-scale.
 They are intentionally not stored in configuration files or output metadata.
 
 ```bash
@@ -62,19 +62,19 @@ information:
 examples/fixed_context.py
 ```
 
-### 🧩 FreeSWE
+### 🧩 SWE-at-scale
 
 The input file itself remains unnumbered. Reference numbers are added only to
 the model prompt, and the returned patch must apply to the original source
 without those prefixes.
 
 ```bash
-export FREESWE_MODEL='your-model'
+export SWE_AT_SCALE_MODEL='your-model'
 
-freeswe free-swe \
-  --model "$FREESWE_MODEL" \
+swe-at-scale direct \
+  --model "$SWE_AT_SCALE_MODEL" \
   --input examples/fixed_context.py \
-  --output-dir outputs/free_swe
+  --output-dir outputs/swe_at_scale
 ```
 
 The model must return exactly:
@@ -86,7 +86,7 @@ diff --git a/fixed_context.py b/fixed_context.py
 </issue_patch>
 ```
 
-### ✨ FreeSWE+
+### ✨ SWE-at-scale+
 
 The planner returns both a structured implementation plan and a natural
 language problem statement. The executor receives the fixed source and the
@@ -95,14 +95,14 @@ but is not passed to the executor by default; use the flag only for an
 intentional problem-statement variant.
 
 ```bash
-export FREESWE_PLUS_PLANNER_MODEL='your-planner-model'
-export FREESWE_PLUS_EXECUTOR_MODEL='your-executor-model'
+export SWE_AT_SCALE_PLUS_PLANNER_MODEL='your-planner-model'
+export SWE_AT_SCALE_PLUS_EXECUTOR_MODEL='your-executor-model'
 
-freeswe free-swe-plus \
-  --planner-model "$FREESWE_PLUS_PLANNER_MODEL" \
-  --executor-model "$FREESWE_PLUS_EXECUTOR_MODEL" \
+swe-at-scale plus \
+  --planner-model "$SWE_AT_SCALE_PLUS_PLANNER_MODEL" \
+  --executor-model "$SWE_AT_SCALE_PLUS_EXECUTOR_MODEL" \
   --input examples/fixed_context.py \
-  --output-dir outputs/free_swe_plus
+  --output-dir outputs/swe_at_scale_plus
 ```
 
 The planner returns a structured implementation plan and a realistic problem
@@ -137,13 +137,13 @@ directory:
 
 ```text
 messages.json                 # sanitized prompt messages
-planner_messages.json         # FreeSWE+ only
-executor_messages.json        # FreeSWE+ only
-model_raw_output.txt          # FreeSWE only
-planner_raw_output.txt        # FreeSWE+ only
-executor_raw_output.txt       # FreeSWE+ only
-problem_statement.txt         # FreeSWE+ only, when returned
-modified_file                 # FreeSWE+ only
+planner_messages.json         # SWE-at-scale+ only
+executor_messages.json        # SWE-at-scale+ only
+model_raw_output.txt          # SWE-at-scale only
+planner_raw_output.txt        # SWE-at-scale+ only
+executor_raw_output.txt       # SWE-at-scale+ only
+problem_statement.txt         # SWE-at-scale+ only, when returned
+modified_file                 # SWE-at-scale+ only
 injected_file                 # validated issue-state file
 injection.patch               # validated unified diff
 result.json                   # status, patch statistics, and validation details
@@ -161,9 +161,9 @@ The following values are runtime-only:
 | `OPENAI_API_KEY` | API credential |
 | `OPENAI_BASE_URL` | Optional OpenAI-compatible endpoint override |
 | `OPENAI_MODEL` | Fallback model identifier |
-| `FREESWE_MODEL` | FreeSWE model identifier |
-| `FREESWE_PLUS_PLANNER_MODEL` | FreeSWE+ planner model identifier |
-| `FREESWE_PLUS_EXECUTOR_MODEL` | FreeSWE+ executor model identifier |
+| `SWE_AT_SCALE_MODEL` | SWE-at-scale model identifier |
+| `SWE_AT_SCALE_PLUS_PLANNER_MODEL` | SWE-at-scale+ planner model identifier |
+| `SWE_AT_SCALE_PLUS_EXECUTOR_MODEL` | SWE-at-scale+ executor model identifier |
 
 Command-line model options override the corresponding environment variables.
 Never commit a real `.env` file or generated output containing proprietary
@@ -172,14 +172,14 @@ source code.
 ## 🗂️ Repository structure
 
 ```text
-FreeSWE/
+SWE-at-scale/
 ├── assets/
-│   ├── FreeSWE_logo.png
+│   ├── SWE-at-scale_logo.png
 │   ├── framework.pdf
 │   └── framework.png
 ├── examples/
 │   └── fixed_context.py
-├── src/freeswe/                # provider client, CLI, pipelines, validation
+├── src/swe_at_scale/           # provider client, CLI, pipelines, validation
 ├── tests/
 ├── .env.example
 ├── .gitignore
@@ -192,4 +192,4 @@ FreeSWE/
 We thank the authors and maintainers of [SWE-smith](https://github.com/SWE-bench/SWE-smith)
 and [SWE-bench](https://github.com/SWE-bench/SWE-bench) for their open-source
 benchmark resources and evaluation foundations, which informed the design of
-FreeSWE and FreeSWE+.
+SWE-at-scale and SWE-at-scale+.

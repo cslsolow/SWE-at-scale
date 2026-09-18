@@ -1,4 +1,4 @@
-"""FreeSWE+ planning-and-execution inference pipeline."""
+"""SWE-at-scale+ planning-and-execution inference pipeline."""
 
 from __future__ import annotations
 

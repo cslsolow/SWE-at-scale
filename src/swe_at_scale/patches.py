@@ -113,12 +113,12 @@ def apply_patch_safely(file_name: str, original: str, patch: str) -> tuple[bool,
     if not patch.strip():
         return False, "empty_patch", details
 
-    with tempfile.TemporaryDirectory(prefix="freeswe_apply_") as temp:
+    with tempfile.TemporaryDirectory(prefix="swe_at_scale_apply_") as temp:
         root = Path(temp)
         target = root / expected
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(original, encoding="utf-8")
-        patch_path = root / ".freeswe.patch"
+        patch_path = root / ".swe_at_scale.patch"
         patch_path.write_text(patch, encoding="utf-8")
         applied, first_error = _run_apply(root, patch_path, reverse=False, recount=False)
         if applied:
@@ -133,12 +133,12 @@ def apply_patch_safely(file_name: str, original: str, patch: str) -> tuple[bool,
             return False, "forward_apply_failed", details
         modified = target.read_text(encoding="utf-8")
 
-    with tempfile.TemporaryDirectory(prefix="freeswe_roundtrip_") as temp:
+    with tempfile.TemporaryDirectory(prefix="swe_at_scale_roundtrip_") as temp:
         root = Path(temp)
         target = root / expected
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(modified, encoding="utf-8")
-        patch_path = root / ".freeswe.patch"
+        patch_path = root / ".swe_at_scale.patch"
         patch_path.write_text(patch, encoding="utf-8")
         reversed_ok, reverse_error = _run_apply(root, patch_path, reverse=True, recount=False)
         if not reversed_ok:

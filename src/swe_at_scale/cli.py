@@ -1,4 +1,4 @@
-"""Command-line interface for the FreeSWE issue-injection pipelines."""
+"""Command-line interface for the SWE-at-scale issue-injection pipelines."""
 
 from __future__ import annotations
 
@@ -33,15 +33,15 @@ def _common(parser: argparse.ArgumentParser) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="freeswe",
-        description="Generate an SWE-style issue with FreeSWE or FreeSWE+.",
+        prog="swe-at-scale",
+        description="Generate an SWE-style issue with SWE-at-scale or SWE-at-scale+.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     numbered = subparsers.add_parser(
-        "free-swe",
+        "direct",
         aliases=["numbered-fixed"],
-        help="FreeSWE: direct issue-patch generation",
+        help="SWE-at-scale: direct issue-patch generation",
     )
     _common(numbered)
     numbered.add_argument("--model")
@@ -50,9 +50,9 @@ def build_parser() -> argparse.ArgumentParser:
     numbered.add_argument("--max-tokens", type=int, default=16_384)
 
     planner = subparsers.add_parser(
-        "free-swe-plus",
+        "plus",
         aliases=["task-plan"],
-        help="FreeSWE+: planner/executor issue generation",
+        help="SWE-at-scale+: planner/executor issue generation",
     )
     _common(planner)
     planner.add_argument("--planner-model")
@@ -73,11 +73,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.command in {"free-swe", "numbered-fixed"}:
+    if args.command in {"direct", "numbered-fixed"}:
         result = run_numbered_fixed(
             args.input,
             args.output_dir,
-            model=_required_model(args.model, ("FREESWE_MODEL", "NUMBERED_FIXED_MODEL")),
+            model=_required_model(args.model, ("SWE_AT_SCALE_MODEL", "NUMBERED_FIXED_MODEL")),
             base_url=args.base_url,
             temperature=args.temperature,
             max_tokens=args.max_tokens,
@@ -90,11 +90,11 @@ def main(argv: list[str] | None = None) -> int:
             args.output_dir,
             planner_model=_required_model(
                 args.planner_model,
-                ("FREESWE_PLUS_PLANNER_MODEL", "TASK_PLAN_MODEL"),
+                ("SWE_AT_SCALE_PLUS_PLANNER_MODEL", "TASK_PLAN_MODEL"),
             ),
             executor_model=_required_model(
                 args.executor_model,
-                ("FREESWE_PLUS_EXECUTOR_MODEL", "TASK_PLAN_EXECUTOR_MODEL"),
+                ("SWE_AT_SCALE_PLUS_EXECUTOR_MODEL", "TASK_PLAN_EXECUTOR_MODEL"),
             ),
             planner_base_url=args.planner_base_url,
             executor_base_url=args.executor_base_url,

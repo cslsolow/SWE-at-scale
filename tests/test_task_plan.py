@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from freeswe.api import Generation
-from freeswe.task_plan import run as run_task_plan
+from swe_at_scale.api import Generation
+from swe_at_scale.task_plan import run as run_task_plan
 
 
 class FakeClient:
@@ -25,7 +25,7 @@ def test_task_plan_and_executor_outputs_patch(tmp_path: Path):
     executor = FakeClient([executor_output])
 
     # Use a tiny factory-like shim so the test does not make network calls.
-    import freeswe.task_plan as module
+    import swe_at_scale.task_plan as module
 
     clients = iter([planner, executor])
     original_client = module.ChatClient

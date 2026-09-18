@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from freeswe.api import Generation
-from freeswe.numbered_fixed import run as run_numbered
-from freeswe.patches import apply_patch_safely, make_unified_diff
+from swe_at_scale.api import Generation
+from swe_at_scale.numbered_fixed import run as run_numbered
+from swe_at_scale.patches import apply_patch_safely, make_unified_diff
 
 
 def test_unified_diff_applies_and_roundtrips():
