@@ -60,8 +60,6 @@ def build_executor_messages(
     file_name: str,
     source: str,
     task_plan: str,
-    problem_statement: str = "",
-    include_problem_statement: bool = False,
 ) -> list[dict[str, str]]:
     sections = [
         f'<fixed_context path="{safe_display_name(file_name)}">',
@@ -73,8 +71,6 @@ def build_executor_messages(
         "</task_plan>",
         "",
     ]
-    if include_problem_statement and problem_statement.strip():
-        sections.extend(["<problem_statement>", problem_statement, "</problem_statement>", ""])
     sections.extend(["<task>", EXECUTOR_TASK_PROMPT, "</task>"])
     return [
         {"role": "system", "content": EXECUTOR_SYSTEM_PROMPT},
@@ -102,7 +98,6 @@ def run(
     executor_max_tokens: int = 65_536,
     timeout: float = 1_800.0,
     api_retries: int = 3,
-    include_problem_statement: bool = False,
 ) -> dict[str, object]:
     source = input_file.read_text(encoding="utf-8")
     display_name = safe_display_name(input_file.name)
@@ -124,9 +119,6 @@ def run(
     )
     (output_dir / "planner_raw_output.txt").write_text(planner_generation.content, encoding="utf-8")
     task_plan, plan_parse = extract_single_tag(planner_generation.content, "task_plan")
-    problem_statement, problem_parse = extract_single_tag(
-        planner_generation.content, "problem_statement"
-    )
     if plan_parse["status"] != "ok":
         result = {
             "mode": "task_plan",
@@ -135,22 +127,17 @@ def run(
             "executor_model": executor_model,
             "status": "planner_parse_failed",
             "planner_parse": plan_parse,
-            "problem_statement_parse": problem_parse,
             "patch_applied": False,
         }
         _write_json(output_dir / "result.json", result)
         return result
 
     (output_dir / "task_plan.txt").write_text(task_plan, encoding="utf-8")
-    if problem_parse["status"] == "ok":
-        (output_dir / "problem_statement.txt").write_text(problem_statement, encoding="utf-8")
 
     executor_messages = build_executor_messages(
         display_name,
         source,
         task_plan,
-        problem_statement,
-        include_problem_statement,
     )
     _write_json(output_dir / "executor_messages.json", {"messages": executor_messages})
     executor = ChatClient(
@@ -175,7 +162,6 @@ def run(
             "executor_model": executor_model,
             "status": "executor_parse_failed",
             "planner_parse": plan_parse,
-            "problem_statement_parse": problem_parse,
             "executor_parse": executor_parse,
             "patch_applied": False,
         }
@@ -192,7 +178,6 @@ def run(
             "executor_model": executor_model,
             "status": "empty_injection_patch",
             "planner_parse": plan_parse,
-            "problem_statement_parse": problem_parse,
             "executor_parse": executor_parse,
             "patch_applied": False,
         }
@@ -207,7 +192,6 @@ def run(
         "executor_model": executor_model,
         "status": "ok" if applied else "patch_rejected",
         "planner_parse": plan_parse,
-        "problem_statement_parse": problem_parse,
         "executor_parse": executor_parse,
         "patch_applied": applied,
         "patch_stats": patch_stats(patch),

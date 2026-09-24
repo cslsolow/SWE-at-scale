@@ -63,11 +63,6 @@ def build_parser() -> argparse.ArgumentParser:
     planner.add_argument("--executor-temperature", type=float, default=0.0)
     planner.add_argument("--planner-max-tokens", type=int, default=8_192)
     planner.add_argument("--executor-max-tokens", type=int, default=65_536)
-    planner.add_argument(
-        "--include-problem-statement",
-        action="store_true",
-        help="also give the generated problem statement to the executor",
-    )
     return parser
 
 
@@ -104,7 +99,6 @@ def main(argv: list[str] | None = None) -> int:
             executor_max_tokens=args.executor_max_tokens,
             timeout=args.timeout,
             api_retries=args.api_retries,
-            include_problem_statement=args.include_problem_statement,
         )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("status") == "ok" else 1

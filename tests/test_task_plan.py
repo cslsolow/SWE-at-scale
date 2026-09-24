@@ -46,3 +46,6 @@ def test_task_plan_and_executor_outputs_patch(tmp_path: Path):
     assert (tmp_path / "out" / "injection.patch").exists()
     assert (tmp_path / "out" / "injected_file").read_text() == modified
     assert "input.py" == result["target_file"]
+    assert not (tmp_path / "out" / "problem_statement.txt").exists()
+    assert "problem_statement_parse" not in result
+    assert "<problem_statement>" not in (tmp_path / "out" / "executor_messages.json").read_text()

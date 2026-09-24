@@ -22,7 +22,7 @@ applied to the original source.
 | Mode | Model interaction | Final artifact |
 |---|---|---|
 | **SWE-at-scale** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
-| **SWE-at-scale+** | A planner proposes a structured implementation plan and problem statement; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
+| **SWE-at-scale+** | A planner proposes a structured implementation plan; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
 
 The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
@@ -88,11 +88,9 @@ diff --git a/fixed_context.py b/fixed_context.py
 
 ### ✨ SWE-at-scale+
 
-The planner returns both a structured implementation plan and a natural
-language problem statement. The executor receives the fixed source and the
-plan, then returns the complete modified file. The problem statement is saved
-but is not passed to the executor by default; use the flag only for an
-intentional problem-statement variant.
+The planner returns a structured implementation plan and a natural language
+problem statement. Only the plan is passed to the executor, which returns the
+complete modified file.
 
 ```bash
 export SWE_AT_SCALE_PLUS_PLANNER_MODEL='your-planner-model'
@@ -105,8 +103,7 @@ swe-at-scale plus \
   --output-dir outputs/swe_at_scale_plus
 ```
 
-The planner returns a structured implementation plan and a realistic problem
-statement. The executor receives the fixed source and the structured plan.
+The executor receives the fixed source and the structured plan.
 
 The expected executor format is:
 
@@ -142,7 +139,6 @@ executor_messages.json        # SWE-at-scale+ only
 model_raw_output.txt          # SWE-at-scale only
 planner_raw_output.txt        # SWE-at-scale+ only
 executor_raw_output.txt       # SWE-at-scale+ only
-problem_statement.txt         # SWE-at-scale+ only, when returned
 modified_file                 # SWE-at-scale+ only
 injected_file                 # validated issue-state file
 injection.patch               # validated unified diff
