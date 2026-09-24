@@ -1,4 +1,4 @@
-"""Command-line interface for the SWE-at-scale issue-injection pipelines."""
+"""Command-line interface for the SWE-at-Scale issue-injection pipelines."""
 
 from __future__ import annotations
 
@@ -34,14 +34,14 @@ def _common(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="swe-at-scale",
-        description="Generate an SWE-style issue with SWE-at-scale or SWE-at-scale+.",
+        description="Generate an SWE-style issue with SWE-at-Scale or SWE-at-Scale+.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     numbered = subparsers.add_parser(
         "direct",
         aliases=["numbered-fixed"],
-        help="SWE-at-scale: direct issue-patch generation",
+        help="SWE-at-Scale: direct issue-patch generation",
     )
     _common(numbered)
     numbered.add_argument("--model")
@@ -52,7 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
     planner = subparsers.add_parser(
         "plus",
         aliases=["task-plan"],
-        help="SWE-at-scale+: planner/executor issue generation",
+        help="SWE-at-Scale+: planner/executor issue generation",
     )
     _common(planner)
     planner.add_argument("--planner-model")

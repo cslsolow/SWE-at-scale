@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "swe-at-scale-injection"
 version = "0.1.0"
-description = "SWE-at-scale and SWE-at-scale+ issue injection pipelines"
+description = "SWE-at-Scale and SWE-at-Scale+ issue injection pipelines"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["openai>=1.40.0"]

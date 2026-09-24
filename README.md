@@ -1,28 +1,28 @@
 <div align="center">
-  <img src="assets/SWE-at-scale_logo.png" alt="SWE-at-scale" width="760" />
-  <h1>🧪 SWE-at-scale: Scalable Issue Synthesis from Historical Bug Fixes </h1>
+  <img src="assets/SWE-at-Scale_logo.png" alt="SWE-at-Scale" width="760" />
+  <h1>🧪 SWE-at-Scale: Scalable Issue Synthesis from Historical Bug Fixes </h1>
   <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
 
 ## 🧭 Overview
 
-SWE-at-scale packages two complementary issue-injection methods behind one small
-command-line interface. **SWE-at-scale** directly proposes a behaviorally meaningful
-issue patch, while **SWE-at-scale+** first creates a structured plan and then
+SWE-at-Scale packages two complementary issue-injection methods behind one small
+command-line interface. **SWE-at-Scale** directly proposes a behaviorally meaningful
+issue patch, while **SWE-at-Scale+** first creates a structured plan and then
 uses an executor to implement it. Both methods start from verified, correct
 source code and produce an injected file plus a unified diff that can be
 applied to the original source.
 
-![SWE-at-scale framework](assets/framework.png)
+![SWE-at-Scale framework](assets/framework.png)
 
 
 ### 🔀 What is different
 
 | Mode | Model interaction | Final artifact |
 |---|---|---|
-| **SWE-at-scale** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
-| **SWE-at-scale+** | A planner proposes a structured implementation plan; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
+| **SWE-at-Scale** | The model sees the fixed source with reference line numbers and directly proposes an issue patch. | `<issue_patch>` → injected file + unified diff |
+| **SWE-at-Scale+** | A planner proposes a structured implementation plan; a separate executor implements that plan in the fixed source. | planner output → modified source → injected file + unified diff |
 
 The planner decides the task. The executor implements the plan. Keeping these
 roles separate is important: the executor is not asked to invent a different
@@ -48,7 +48,7 @@ in this repository.
 
 ## 🚀 Quick start
 
-Set a credential and the model identifiers in the shell that launches SWE-at-scale.
+Set a credential and the model identifiers in the shell that launches SWE-at-Scale.
 They are intentionally not stored in configuration files or output metadata.
 
 ```bash
@@ -62,7 +62,7 @@ information:
 examples/fixed_context.py
 ```
 
-### 🧩 SWE-at-scale
+### 🧩 SWE-at-Scale
 
 The input file itself remains unnumbered. Reference numbers are added only to
 the model prompt, and the returned patch must apply to the original source
@@ -86,7 +86,7 @@ diff --git a/fixed_context.py b/fixed_context.py
 </issue_patch>
 ```
 
-### ✨ SWE-at-scale+
+### ✨ SWE-at-Scale+
 
 The planner returns a structured implementation plan and a natural language
 problem statement. Only the plan is passed to the executor, which returns the
@@ -134,12 +134,12 @@ directory:
 
 ```text
 messages.json                 # sanitized prompt messages
-planner_messages.json         # SWE-at-scale+ only
-executor_messages.json        # SWE-at-scale+ only
-model_raw_output.txt          # SWE-at-scale only
-planner_raw_output.txt        # SWE-at-scale+ only
-executor_raw_output.txt       # SWE-at-scale+ only
-modified_file                 # SWE-at-scale+ only
+planner_messages.json         # SWE-at-Scale+ only
+executor_messages.json        # SWE-at-Scale+ only
+model_raw_output.txt          # SWE-at-Scale only
+planner_raw_output.txt        # SWE-at-Scale+ only
+executor_raw_output.txt       # SWE-at-Scale+ only
+modified_file                 # SWE-at-Scale+ only
 injected_file                 # validated issue-state file
 injection.patch               # validated unified diff
 result.json                   # status, patch statistics, and validation details
@@ -157,9 +157,9 @@ The following values are runtime-only:
 | `OPENAI_API_KEY` | API credential |
 | `OPENAI_BASE_URL` | Optional OpenAI-compatible endpoint override |
 | `OPENAI_MODEL` | Fallback model identifier |
-| `SWE_AT_SCALE_MODEL` | SWE-at-scale model identifier |
-| `SWE_AT_SCALE_PLUS_PLANNER_MODEL` | SWE-at-scale+ planner model identifier |
-| `SWE_AT_SCALE_PLUS_EXECUTOR_MODEL` | SWE-at-scale+ executor model identifier |
+| `SWE_AT_SCALE_MODEL` | SWE-at-Scale model identifier |
+| `SWE_AT_SCALE_PLUS_PLANNER_MODEL` | SWE-at-Scale+ planner model identifier |
+| `SWE_AT_SCALE_PLUS_EXECUTOR_MODEL` | SWE-at-Scale+ executor model identifier |
 
 Command-line model options override the corresponding environment variables.
 Never commit a real `.env` file or generated output containing proprietary
@@ -170,7 +170,7 @@ source code.
 ```text
 SWE-at-scale/
 ├── assets/
-│   ├── SWE-at-scale_logo.png
+│   ├── SWE-at-Scale_logo.png
 │   ├── framework.pdf
 │   └── framework.png
 ├── examples/
@@ -188,4 +188,4 @@ SWE-at-scale/
 We thank the authors and maintainers of [SWE-smith](https://github.com/SWE-bench/SWE-smith)
 and [SWE-bench](https://github.com/SWE-bench/SWE-bench) for their open-source
 benchmark resources and evaluation foundations, which informed the design of
-SWE-at-scale and SWE-at-scale+.
+SWE-at-Scale and SWE-at-Scale+.

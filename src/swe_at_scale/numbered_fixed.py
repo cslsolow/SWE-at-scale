@@ -1,4 +1,4 @@
-"""SWE-at-scale direct inference pipeline."""
+"""SWE-at-Scale direct inference pipeline."""
 
 from __future__ import annotations
 
