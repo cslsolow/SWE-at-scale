@@ -1,9 +1,22 @@
+ 
+```html
 <div align="center">
   <img src="assets/SWE-at-Scale_logo.png" alt="SWE-at-Scale" width="760" />
-  <h1>🧪 SWE-at-Scale: Scalable Issue Synthesis from Historical Bug Fixes </h1>
+
+  <h1>🧪 SWE-at-Scale: Scalable Issue Synthesis from Historical Bug Fixes</h1>
+
   <p><strong>Realistic issue injection for SWE-style benchmarks</strong></p>
+
+  <p>
+    <a href="https://huggingface.co/SWE-at-Scale">
+      <img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Models%20%26%20Datasets-yellow" alt="Hugging Face" />
+    </a>
+  </p>
+
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
+```
+
 
 ## 🧭 Overview
 
