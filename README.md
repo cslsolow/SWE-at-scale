@@ -1,5 +1,4 @@
  
-```html
 <div align="center">
   <img src="assets/SWE-at-Scale_logo.png" alt="SWE-at-Scale" width="760" />
 
@@ -15,7 +14,6 @@
 
   <p>Generate behaviorally meaningful buggy states from correct code, validate the resulting patch, and keep the complete provenance of each run.</p>
 </div>
-```
 
 
 ## 🧭 Overview
