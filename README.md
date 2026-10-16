@@ -1,4 +1,3 @@
- 
 <div align="center">
   <img src="assets/SWE-at-Scale_logo.png" alt="SWE-at-Scale" width="760" />
 
@@ -9,6 +8,9 @@
   <p>
     <a href="https://huggingface.co/SWE-at-Scale">
       <img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Models%20%26%20Datasets-yellow" alt="Hugging Face" />
+    </a>
+    <a href="https://arxiv.org/abs/2610.21359">
+      <img src="https://img.shields.io/badge/arXiv-2610.21359-b31b1b.svg" alt="arXiv" />
     </a>
   </p>
 
